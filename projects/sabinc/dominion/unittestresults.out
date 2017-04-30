@@ -2,14 +2,14 @@
 ---------- STARTING Test: Smithy ----------
 *******************************************
 Test 1. Current player should receive exactly 3 cards.
-hand count = 7, expected = 7
+hand count = 9, expected = 7
 
-**********************Test #1: PASS
+**********************Test #1: FAIL
 
 Test 2. 3 cards should come from player's pile.
-deck count = 2, expected = 2
+deck count = 0, expected = 2
 
-**********************Test #2: PASS
+**********************Test #2: FAIL
 
 Test 3. No state change should occur for other players.
 hand count from other player = 0, expected = 0
@@ -107,7 +107,7 @@ supply count for gold = 30, expected 30
 
 
 File 'cardtest1.c'
-Lines executed:98.00% of 50
+Lines executed:100.00% of 50
 Creating 'cardtest1.c.gcov'
 
         -:    0:Source:cardtest1.c
@@ -140,9 +140,9 @@ Creating 'cardtest1.c.gcov'
        20:   23:void assertEquals(int Test,  int prev, int post)
         -:   24:{
        20:   25:	if(prev == post)
-       20:   26:		printf("\n**********************Test #%d: PASS\n\n", Test);
+       18:   26:		printf("\n**********************Test #%d: PASS\n\n", Test);
         -:   27:	else
-    #####:   28:		printf("\n**********************Test #%d: FAIL\n\n", Test);
+        2:   28:		printf("\n**********************Test #%d: FAIL\n\n", Test);
        20:   29:}
         -:   30:
         -:   31:
@@ -238,14 +238,14 @@ hand count = 5, expected = 5
 **********************Test #1: PASS
 
 Test 2. 1 card should come from player's own pile.
-deck count = 4, expected = 4
+deck count = 5, expected = 4
 
-**********************Test #2: PASS
+**********************Test #2: FAIL
 
 Test 3. Current player should receive exactly 2 actions.
-Player action count = 3, expected = 3
+Player action count = 1, expected = 3
 
-**********************Test #3: PASS
+**********************Test #3: FAIL
 
 Test 4. No state change should occur for other players.
 hand count from other player = 0, expected = 0 at index 1
@@ -344,7 +344,7 @@ supply count for gold = 30, expected 30
 
 
 File 'cardtest2.c'
-Lines executed:98.25% of 57
+Lines executed:100.00% of 57
 Creating 'cardtest2.c.gcov'
 
         -:    0:Source:cardtest2.c
@@ -377,9 +377,9 @@ Creating 'cardtest2.c.gcov'
        21:   23:void assertEquals(int Test,  int prev, int post)
         -:   24:{
        21:   25:	if(prev == post)
-       21:   26:		printf("\n**********************Test #%d: PASS\n\n", Test);
+       19:   26:		printf("\n**********************Test #%d: PASS\n\n", Test);
         -:   27:	else
-    #####:   28:		printf("\n**********************Test #%d: FAIL\n\n", Test);
+        2:   28:		printf("\n**********************Test #%d: FAIL\n\n", Test);
        21:   29:}
         -:   30:
         -:   31:/*
