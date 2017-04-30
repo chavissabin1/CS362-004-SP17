@@ -107,13 +107,13 @@ int main(){
 	
 	printf("Test 2. Discard pile should have 2 less cards than before.\n");
 	/*2. 2. Discard pile should have 2 less cards than before.*/
-	printf("deck count = %d, expected = %d\n", testG.deckCount[thisPlayer], G.deckCount[thisPlayer] - newCards + shuffledCards);
+	printf("deck count = %d, expected = %d\n", testG.discardCount[thisPlayer], G.discardCount[thisPlayer] - newCards + discarded);
 	assertEquals(testNum, testG.discardCount[thisPlayer], G.discardCount[thisPlayer] - newCards + discarded);
 	testNum++;
 
-	printf("Test 3. New hand's score should outscore the previous hand by at least 2 teasures (indicating that the 2 new cards are at least coppers and above)");
+	printf("Test 3. New hand's score should outscore the previous hand by at least 2 teasures (indicating that the 2 new cards are at least coppers and above)\n\n");
 	/*3.New hand's score should outscore the previous hand by at least 2 teasures (indicating that the 2 new cards are at least coppers and above) */
-	printf("Score of %d should score at least 2 higher than %d",postScore[thisPlayer],prevScore[thisPlayer]);
+	printf("Score of %d should score at least 2 higher than %d\n\n",postScore[thisPlayer],prevScore[thisPlayer]);
 	assertGreaterThan(testNum, postScore[thisPlayer], prevScore[thisPlayer]+minAdventererScore-1);	
 	testNum++;
 	
