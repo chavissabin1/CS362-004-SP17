@@ -29,21 +29,20 @@ interface.o: interface.h interface.c
 	# gcov dominion.c >> unittestresult.out
 	# cat dominion.c.gcov >> unittestresult.out
 	
-unittestresults.out: cardtest1 cardtest2 cardtest3 cardtest4 unittest1 unittest2 unittest3 unittest4
-	./cardtest1 &> unittestresults.out
-	./cardtest2 >> unittestresults.out
-	./cardtest3 >> unittestresults.out
-	./cardtest4 >> unittestresults.out
-	./unittest1 >> unittestresults.out
-	./unittest2 >> unittestresults.out
-	./unittest3 >> unittestresults.out
-	./unittest4 >> unittestresults.out
-	gcov -b -f  dominion.o >> unittestresults.out
-	cat dominion.c.gcov >> unittestresults.out
+randomtestresults.out: randomtestcardadventurer 
+	./randomtestcardadventurer &> randomtestresults.out
+	gcov -b -f  dominion.o >> randomtestresults.out
+	cat dominion.c.gcov >> randomtestresults.out
 
 
-unittest1: unittest1.c dominion.o 
-	gcc -o unittest1 -g  unittest1.c dominion.o rngs.o $(CFLAGS)
+randomtestcardadventurer: randomtestcardadventurer.c dominion.o 
+	gcc -o randomtestcardadventurer -g  randomtestcardadventurer.c dominion.o rngs.o $(CFLAGS)
+
+randomtestcard1: randomtestcard1.c dominion.o 
+	gcc -o randomtestcard1 -g  randomtestcard1.c dominion.o rngs.o $(CFLAGS)
+
+randomtestcard2: randomtestcard2.c dominion.o 
+	gcc -o randomtestcard2 -g  randomtestcard2.c dominion.o rngs.o $(CFLAGS)	
 	
 unittest2: unittest2.c dominion.o
 	gcc -o unittest2 -g  unittest2.c dominion.o rngs.o $(CFLAGS)
