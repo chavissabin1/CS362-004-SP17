@@ -1279,7 +1279,7 @@ int PlaySmitty(struct gameState *state, int handPos)
 	int i;
 	int currentPlayer = whoseTurn(state);
 	//+3 Cards
-      for (i = 0; i < 30000; i++)//BUG: for loop will exceep number of cards in deck
+      for (i = 0; i < MAX_PLAYERS; i++)//BUG: for loop will exceed number of cards in deck
 	{
 	 drawCard(currentPlayer, state);
 	}
