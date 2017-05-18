@@ -99,7 +99,7 @@ void randomTestAdventurer(int test)
 			"sea_hag", "tribute", "smithy", "council_room", "estate", "duchy", "province", "copper",
 			 "silver", "gold"};
 			  
-	player = floor(rand() % MAX_PLAYERS+1);
+	player = floor(rand() % MAX_PLAYERS);
 	G.deckCount[player] = floor(rand() % MAX_DECK+1);
 	G.discardCount[player] = floor(rand() % MAX_DECK+1);
 	G.handCount[player] = floor(rand() % MAX_HAND+1);
@@ -121,16 +121,16 @@ void randomTestAdventurer(int test)
 	
 	//gather scores from all players
 	for(m = 1; m <  MAX_PLAYERS; m++){
-		printf("%d\n\n\n\n\n",G.discardCount[m]);
-		//postScore[m] = scoreFor(m,&testG);
+		
+		postScore[m] = scoreFor(m,&testG);
 	}
-	
+		
 	cardEffect(adventurer, choice1, choice2, choice3, &testG, handPos, &bonus);
 	
 	//gather scores from all players
-	// for(n = 0; n <  MAX_PLAYERS; n++){
-		// postScore[n] = scoreFor(n,&testG);
-	// }
+	for(n = 1; n <  MAX_PLAYERS; n++){
+		postScore[n] = scoreFor(n,&testG);
+	}
 	
 	/*Test 1. Current player should receive exactly 2 cards*/
 	if(assertEquals(testG.handCount[player],G.handCount[player] + newCards - discard) == FALSE)
@@ -157,22 +157,25 @@ void randomTestAdventurer(int test)
     /*Test 5. No state change should occur for other players.*/
 	for(i = 0;i < MAX_PLAYERS; i++){
 		
-		if(assertEquals(postScore[i], prevScore[i]) == FALSE)
+		if(i != player)
 		{
-			printf("ERROR: hand count from player %d = %d, expected = %d\n", i+1, postScore[i], prevScore[i]);
-			errorFlag++;
-		}
-		
-		if(assertEquals(testG.handCount[i], G.handCount[i]) == FALSE)
-		{
-			printf("ERROR: hand count from player %d = %d, expected = %d\n", i+1, testG.handCount[i], G.handCount[i]);
-			errorFlag++;
-		}
-		
-		if(assertEquals(testG.deckCount[i], G.deckCount[i]) == FALSE)
-		{
-			printf("ERROR: deck count from player %d = %d, expected = %d\n", i+1, testG.deckCount[i], G.deckCount[i]);
-			errorFlag++;
+			if(assertEquals(postScore[i], prevScore[i]) == FALSE)
+			{
+				printf("ERROR: hand count from player %d = %d, expected = %d\n", i+1, postScore[i], prevScore[i]);
+				errorFlag++;
+			}
+			
+			if(assertEquals(testG.handCount[i], G.handCount[i]) == FALSE)
+			{
+				printf("ERROR: hand count from player %d = %d, expected = %d\n", i+1, testG.handCount[i], G.handCount[i]);
+				errorFlag++;
+			}
+			
+			if(assertEquals(testG.deckCount[i], G.deckCount[i]) == FALSE)
+			{
+				printf("ERROR: deck count from player %d = %d, expected = %d\n", i+1, testG.deckCount[i], G.deckCount[i]);
+				errorFlag++;
+			}
 		}
 	}
 	

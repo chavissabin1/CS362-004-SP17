@@ -14,7 +14,6 @@
 #include <assert.h>
 #include "rngs.h"
 #include <stdlib.h>
-#include <math.h>
 
 #define TESTCARD "Smithy"
 #define TRUE 1
@@ -93,7 +92,7 @@ void randomTestSmitty(int test)
 			"sea_hag", "tribute", "smithy", "council_room", "estate", "duchy", "province", "copper",
 			 "silver", "gold"};
 			  
-	player = floor(rand() % MAX_PLAYERS+1);
+	player = floor(rand() % MAX_PLAYERS);
 	G.deckCount[player] = floor(rand() % MAX_DECK+1);
 	G.discardCount[player] = floor(rand() % MAX_DECK+1);
 	G.handCount[player] = floor(rand() % MAX_HAND+1);
@@ -125,16 +124,20 @@ void randomTestSmitty(int test)
 	
 	/*Test 3. No state change should occur for other players*/
 	for(i = 0;i < MAX_PLAYERS; i++){
-		if(assertEquals(testG.handCount[i], G.handCount[i]) == FALSE)
-		{
-			printf("ERROR: hand count from player %d = %d, expected = %d\n", i+1, testG.handCount[i], G.handCount[i]);
-			errorFlag++;
-		}
 		
-		if(assertEquals(testG.deckCount[i], G.deckCount[i]) == FALSE)
+		if(i != player)
 		{
-			printf("ERROR: deck count from player %d = %d, expected = %d\n", i+1, testG.deckCount[i], G.deckCount[i]);
-			errorFlag++;
+			if(assertEquals(testG.handCount[i], G.handCount[i]) == FALSE)
+			{
+				printf("ERROR: hand count from player %d = %d, expected = %d\n", i, testG.handCount[i], G.handCount[i]);
+				errorFlag++;
+			}
+			
+			if(assertEquals(testG.deckCount[i], G.deckCount[i]) == FALSE)
+			{
+				printf("ERROR: deck count from player %d = %d, expected = %d\n", i, testG.deckCount[i], G.deckCount[i]);
+				errorFlag++;
+			}
 		}
 	}
 	

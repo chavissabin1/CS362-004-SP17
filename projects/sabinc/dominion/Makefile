@@ -29,8 +29,10 @@ interface.o: interface.h interface.c
 	# gcov dominion.c >> unittestresult.out
 	# cat dominion.c.gcov >> unittestresult.out
 	
-randomtestresults.out: randomtestcardadventurer 
-	./randomtestcardadventurer &> randomtestresults.out
+randomtestresults.out: randomtestcard1 randomtestcard2 randomtestcardadventurer 
+	./randomtestcard1 &> randomtestresults.out
+	./randomtestcard2 >> randomtestresults.out
+	./randomtestcardadventurer >> randomtestresults.out
 	gcov -b -f  dominion.o >> randomtestresults.out
 	cat dominion.c.gcov >> randomtestresults.out
 
