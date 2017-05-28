@@ -100,9 +100,9 @@ void randomTestAdventurer(int test)
 			 "silver", "gold"};
 			  
 	player = floor(rand() % MAX_PLAYERS);
-	G.deckCount[player] = floor(rand() % MAX_DECK+1);
-	G.discardCount[player] = floor(rand() % MAX_DECK+1);
-	G.handCount[player] = floor(rand() % MAX_HAND+1);
+	G.deckCount[player] = floor(Random() * MAX_DECK+1);
+	G.discardCount[player] = floor(Random() * MAX_DECK+1);
+	G.handCount[player] = floor(Random() * MAX_HAND+1);
 	handPos = floor(rand() % G.handCount[player]+1);
 	G.numBuys = 1;
 	G.numActions = 1;
