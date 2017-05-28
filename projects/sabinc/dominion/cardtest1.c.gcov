@@ -1,0 +1,119 @@
+        -:    0:Source:cardtest1.c
+        -:    0:Graph:cardtest1.gcno
+        -:    0:Data:cardtest1.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * sabinc
+        -:    3: * CS 362 SW Eng II
+        -:    4: * Spring 2017
+        -:    5: *
+        -:    6: * Assignment 3
+        -:    7: * cardtest1.c
+        -:    8: */
+        -:    9: 
+        -:   10:#include "dominion.h"
+        -:   11:#include "dominion_helpers.h"
+        -:   12:#include <string.h>
+        -:   13:#include <stdio.h>
+        -:   14:#include <assert.h>
+        -:   15:#include "rngs.h"
+        -:   16:#include <stdlib.h>
+        -:   17:
+        -:   18:#define TESTCARD "Smithy"
+        -:   19:#define TRUE 1
+        -:   20:#define FALSE 0
+        -:   21:#define MAX_S 16
+        -:   22:
+       20:   23:void assertEquals(int Test,  int prev, int post)
+        -:   24:{
+       20:   25:	if(prev == post)
+       20:   26:		printf("\n**********************Test #%d: PASS\n\n", Test);
+        -:   27:	else
+    #####:   28:		printf("\n**********************Test #%d: FAIL\n\n", Test);
+       20:   29:}
+        -:   30:
+        -:   31:
+        -:   32:/*
+        -:   33: * Card Rules:
+        -:   34: *1. Current player should receive exactly 3 cards.
+        -:   35: *2. 3 cards should come from his own pile.
+        -:   36: *3. No state change should occur for other players.
+        -:   37: *4. No state change should occur to the victory card piles and kingdom card piles.
+        -:   38: *
+        -:   39: */
+        -:   40:
+        1:   41:int main(){
+        1:   42:    int newCards = 0;
+        1:   43:    int discarded = 1;
+        1:   44:	int testNum = 1;
+        1:   45:    int shuffledCards = 0; 
+        -:   46:	int i, j;
+        1:   47:    int handpos = 0, choice1 = 0, choice2 = 0, choice3 = 0, bonus = 0;
+        1:   48:    int seed = 1000;
+        1:   49:    int numPlayers = 2;
+        1:   50:    int thisPlayer = 0;
+        -:   51:	struct gameState G, testG;
+        -:   52:	
+        1:   53:	int k[10] = {adventurer, embargo, village, minion, mine, cutpurse,
+        -:   54:			sea_hag, tribute, smithy, council_room};
+        -:   55:			
+        1:   56:	int supply[MAX_S] = {adventurer, embargo, village, minion, mine, cutpurse,
+        -:   57:			sea_hag, tribute, smithy, council_room, estate, duchy, province, copper,
+        -:   58:			silver, gold};
+        -:   59:
+        1:   60:	char *str_sup[MAX_S] = {"adventurer", "embargo", "village", "minion", "mine", "cutpurse",
+        -:   61:			"sea_hag", "tribute", "smithy", "council_room", "estate", "duchy", "province", "copper",
+        -:   62:			"silver", "gold"};
+        -:   63:			
+        -:   64:	// initialize a game state and player cards
+        1:   65:	initializeGame(numPlayers, k, seed, &G);
+        -:   66:	
+        1:   67:	printf("*******************************************\n");
+        1:   68:    printf("---------- STARTING Test: %s ----------\n", TESTCARD);
+        1:   69:	printf("*******************************************\n");
+        -:   70:	
+        -:   71:	// copy the game state to a test case
+        1:   72:	memcpy(&testG, &G, sizeof(struct gameState));	
+        -:   73:
+        1:   74:	cardEffect(smithy, choice1, choice2, choice3, &testG, handpos, &bonus);
+        1:   75:	newCards = 3;
+        -:   76:	
+        1:   77:	printf("Test 1. Current player should receive exactly 3 cards.\n");
+        1:   78:	printf("hand count = %d, expected = %d\n", testG.handCount[thisPlayer], G.handCount[thisPlayer] + newCards - discarded);
+        1:   79:	assertEquals(testNum, testG.handCount[thisPlayer],G.handCount[thisPlayer] + newCards - discarded);
+        1:   80:	testNum++;
+        -:   81:	
+        1:   82:	printf("Test 2. 3 cards should come from player's pile.\n");
+        1:   83:	printf("deck count = %d, expected = %d\n", testG.deckCount[thisPlayer], G.deckCount[thisPlayer] - newCards + shuffledCards);
+        1:   84:	assertEquals(testNum, testG.deckCount[thisPlayer],G.deckCount[thisPlayer] - newCards + shuffledCards);
+        1:   85:	testNum++;
+        -:   86:	
+        1:   87:	printf("Test 3. No state change should occur for other players.\n");
+        2:   88:	for(i = thisPlayer+1;i < numPlayers; i++){
+        1:   89:		printf("hand count from other player = %d, expected = %d\n", testG.handCount[i], G.handCount[i]);
+        1:   90:		assertEquals(testNum, testG.handCount[i], G.handCount[i]);
+        1:   91:		printf("deck count from other player = %d, expected = %d\n", testG.deckCount[i], G.deckCount[i]);
+        1:   92:		assertEquals(testNum, testG.deckCount[i], G.deckCount[i]);
+        -:   93:	}
+        1:   94:	testNum++;
+        -:   95:	
+        1:   96:    printf("Test 4. No state change should occur to the victory card piles and kingdom card piles.\n");
+        -:   97:	
+        -:   98:	/*4. No state change should occur to the victory card piles and kingdom card piles.*/
+       17:   99:	for(j=0;j<MAX_S; j++)
+        -:  100:	{
+       16:  101:		printf("supply count for %s = %d, expected %d\n", str_sup[j], testG.supplyCount[supply[j]],G.supplyCount[supply[j]]);
+       16:  102:		assertEquals(testNum, testG.supplyCount[supply[j]], G.supplyCount[supply[j]]);
+       16:  103:		printf("\n"); 
+        -:  104:	}
+        -:  105:
+        -:  106:    //put tests here
+        -:  107:
+        1:  108:	printf("*******************************************\n");
+        1:  109:    printf("---------- COMPLETED Test: %s ---------\n", TESTCARD);
+        1:  110:	printf("*******************************************\n");
+        1:  111:	printf("\n"); 
+        1:  112:	printf("\n"); 
+        1:  113:    return 0;
+        -:  114:}

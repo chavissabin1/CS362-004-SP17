@@ -1,0 +1,119 @@
+===============
+Bug # 1
+===============
+Title: Incorrect Actions given for Village Card.
+
+Class: CS 362 Software Engineering 2
+e.g. "Feature Request", "System Error", "Serious Bug"
+
+Date:    5/26/17       
+Reported By:   Chavis Sabin		
+Email:   sabinc@oregonstate.edu
+
+Reporting bugs for edwardse in edwardseDominion folder.
+
+
+Where Bug Occurred:
+==================
+Found in playVillage() line 734 in dominion.c
+
+Is it Reproducible: 
+==================
+Yes 
+
+Description
+===========
+For village, player should receive 2 actions, giving you a total of 3 actions for the turn (1 at start of turn + 2 actions). 
+Both unit test and 100% of random test failed to receive correct number of actions
+
+Steps to Produce/Reproduce
+--------------------------
+Initialize the game and check number of player's actions. There should be only one. Called cardEffect() to play Village card. 
+After card is played check current player's actions once more. 
+
+
+Expected Results
+----------------
+Total actions at end of turn: 3
+
+
+Actual Results
+--------------
+Unit test total actions at end of turn: 6
+Random tests total actions at end of turn: 2 
+
+
+Workarounds
+-----------
+None.
+
+
+Attachments
+-----------
+None.
+
+
+Other Information
+-----------------
+Difference in test results between unit and random is due to the initialization of the game state.
+
+
+===============
+Bug # 2
+===============
+Title: Adventurer Card has Incorrect Hand Count.
+
+Class: CS 362 Software Engineering 2
+e.g. "Feature Request", "System Error", "Serious Bug"
+
+Date:    5/26/17       
+Reported By:   Chavis Sabin		
+Email:   sabinc@oregonstate.edu
+
+Reporting bugs for edwardse in edwardseDominion folder.
+
+Where Bug Occurred:
+==================
+Found in playAdventurer() Line 663 in dominion.c.
+
+Is it Reproducible: 
+==================
+
+Is it reproducible: Yes 
+
+Description
+===========
+After adventurer is played the current player has more cards in hand than the adventurer card allows.
+playAdventurer failed both unit and random testing.
+
+
+
+Steps to Produce/Reproduce
+--------------------------
+initialize the game and confirm player's hand count. Then call 
+cardEffect() for adventurer and recheck player's hand count.
+
+
+Expected Results
+----------------
+After adventurer is played the current player should have 1 more cards in their 
+hand than before. (+2 treasure cards - discard)
+
+
+Actual Results
+--------------
+After adventurer is played the current player has 9 cards.
+
+
+Workarounds
+-----------
+None.
+
+
+Attachments
+-----------
+None.
+
+
+Other Information
+-----------------

@@ -1,0 +1,218 @@
+        -:    0:Source:unittest1.c
+        -:    0:Graph:unittest1.gcno
+        -:    0:Data:unittest1.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * sabinc
+        -:    3: * CS 362 SW Eng II
+        -:    4: * Spring 2017
+        -:    5: *
+        -:    6: * Assignment 3
+        -:    7: * unittest1.c
+        -:    8: */
+        -:    9: 
+        -:   10:#include "dominion.h"
+        -:   11:#include "dominion_helpers.h"
+        -:   12:#include <string.h>
+        -:   13:#include <stdio.h>
+        -:   14:#include <assert.h>
+        -:   15:#include "rngs.h"
+        -:   16:#include <stdlib.h>
+        -:   17:
+        -:   18:#define TESTFUNCTION "discardCard"
+        -:   19:#define MAX_TESTS 3
+        -:   20:#define TEST_1 0
+        -:   21:#define TEST_2 1
+        -:   22:#define TEST_3 2
+        -:   23:#define TRUE 1
+        -:   24:#define FALSE 0
+        -:   25:/*
+        -:   26: * Function Rules:
+        -:   27: *1. Card is added to play pile if card is not trashed.
+        -:   28: *2. Card is not added to play pile if card is trashed.
+        -:   29: *3. Selected card is removed from hand.
+        -:   30: *
+        -:   31: */
+        -:   32:
+        9:   33: void assertEquals(int Test,  int prev, int post)
+        -:   34:{
+        9:   35:	if(prev == post)
+        9:   36:		printf("\n**********************Test #%d: PASS\n\n", Test);
+        -:   37:	else
+    #####:   38:		printf("\n**********************Test #%d: FAIL\n\n", Test);
+        9:   39:}
+        -:   40:
+        1:   41: void assertNotEquals(int Test,  int prev, int post)
+        -:   42:{
+        1:   43:	if(prev != post)
+        1:   44:		printf("\n**********************Test #%d: PASS\n\n", Test);
+        -:   45:	else
+    #####:   46:		printf("\n**********************Test #%d: FAIL\n\n", Test);
+        1:   47:}
+        -:   48:
+        3:   49:int runTest(int testNum){
+        3:   50:	int numPlayers = 2;
+        3:   51:	int newCard = 1;
+        3:   52:	int seed = 1000;
+        3:   53:	int thisPlayer = 0;
+        3:   54:	int discard = 1;
+        3:   55:	int handPos = 0;
+        3:   56:	int selectedCard = 0;
+        3:   57:	int trashFlag = 1;
+        3:   58:	int subTest = 0;
+        -:   59:	struct gameState G, testG;
+        3:   60:    int k[10] = {adventurer, embargo, village, minion, mine, cutpurse,
+        -:   61:			sea_hag, tribute, smithy, council_room};	
+        -:   62:	
+        3:   63:	initializeGame(numPlayers, k, seed, &G);
+        -:   64:   
+        -:   65:	// copy the game state to a test case
+        3:   66:	memcpy(&testG, &G, sizeof(struct gameState));
+        -:   67:		
+        3:   68:	switch(testNum)
+        -:   69:	{
+        -:   70:		case TEST_1:
+        -:   71:					
+        1:   72:			printf("Test 1. Card is added to play pile if card is not trashed.\n\n");
+        1:   73:			trashFlag = 0;
+        1:   74:			subTest = 1;
+        1:   75:			handPos = testG.handCount[thisPlayer]-1;			
+        -:   76:			
+        -:   77:			//select card to discard
+        1:   78:			selectedCard = testG.hand[thisPlayer][handPos];
+        -:   79:			
+        -:   80:			
+        1:   81:			discardCard(handPos, thisPlayer, &testG, trashFlag);
+        -:   82:			
+        1:   83:			printf("Test 1.1 Card is added to play pile.\n\n");
+        1:   84:			printf("Top card from played pile = %d, expected = %d\n\n", testG.playedCards[testG.playedCardCount-1], selectedCard);
+        1:   85:			assertEquals(subTest, testG.playedCards[testG.playedCardCount-1], selectedCard);
+        1:   86:			subTest++;
+        -:   87:			
+        1:   88:			printf("Test 1.2 Play pile count incremented.\n\n");
+        1:   89:			printf("Played card count = %d, expected = %d\n\n", testG.playedCardCount, G.playedCardCount + newCard);
+        1:   90:			assertEquals(subTest, testG.playedCardCount, G.playedCardCount + newCard);
+        -:   91:			
+        1:   92:			return 0;
+        -:   93:		case TEST_2:
+        -:   94:					
+        1:   95:			printf("Test 2. Card is not added to play pile if card is trashed.\n\n");
+        1:   96:			trashFlag = 1;
+        1:   97:			subTest = 1;
+        1:   98:			handPos = testG.handCount[thisPlayer]-1;			
+        -:   99:			
+        -:  100:			//select card to discard
+        1:  101:			selectedCard = testG.hand[thisPlayer][handPos];
+        -:  102:			
+        -:  103:			
+        1:  104:			discardCard(handPos, thisPlayer, &testG, trashFlag);
+        -:  105:			
+        1:  106:			printf("Test 2.1 Card is added to play pile.\n\n");
+        1:  107:			printf("Top card from played pile = %d, expected = %d\n\n", testG.playedCards[testG.playedCardCount-1], selectedCard);
+        1:  108:			assertNotEquals(subTest, testG.playedCards[testG.playedCardCount-1], selectedCard);
+        1:  109:			subTest++;
+        -:  110:			
+        1:  111:			printf("Test 2.2 Play pile count incremented.\n\n");
+        1:  112:			printf("Played card count = %d, expected = %d\n\n", testG.playedCardCount, G.playedCardCount);
+        1:  113:			assertEquals(subTest, testG.playedCardCount, G.playedCardCount);
+        -:  114:			
+        1:  115:			return 0;
+        -:  116:		case TEST_3:
+        -:  117:		
+        -:  118:					
+        1:  119:			printf("Test 3. Selected card is removed from hand.\n\n");
+        1:  120:			trashFlag = 1;
+        1:  121:			subTest = 1;
+        1:  122:			handPos = testG.handCount[thisPlayer]-1;			
+        -:  123:			
+        -:  124:			//select last card to discard
+        1:  125:			selectedCard = testG.hand[thisPlayer][handPos];
+        -:  126:			
+        1:  127:			discardCard(handPos, thisPlayer, &testG, trashFlag);
+        -:  128:			
+        1:  129:			printf("Test 3.1 Card is removed from top of hand.\n\n");
+        1:  130:			printf("Top card from hand = %d, expected = %d\n\n", testG.hand[thisPlayer][handPos], -1);
+        1:  131:			assertEquals(subTest, testG.hand[thisPlayer][handPos], -1);
+        1:  132:			subTest++;
+        -:  133:			
+        1:  134:			printf("Test 3.2 hand count has decremented by one.\n\n");
+        1:  135:			printf("Hand count = %d, expected = %d\n\n", testG.handCount[thisPlayer], G.handCount[thisPlayer] - discard);
+        1:  136:			assertEquals(subTest, testG.handCount[thisPlayer], G.handCount[thisPlayer] - discard);
+        1:  137:			subTest++;
+        -:  138:			
+        1:  139:			printf("Test 3.3 Card is removed from hand with more than one card in hand and top card not selected.\n\n");
+        -:  140:			
+        1:  141:			handPos = testG.handCount[thisPlayer]-2;			
+        -:  142:			
+        -:  143:			//select last card to discard
+        1:  144:			selectedCard = testG.hand[thisPlayer][handPos];
+        -:  145:			
+        1:  146:			discardCard(handPos, thisPlayer, &testG, trashFlag);
+        -:  147:			
+        1:  148:			discard++;
+        1:  149:			printf("Top card from hand = %d, expected = %d\n\n", testG.hand[thisPlayer][handPos], G.hand[thisPlayer][handPos-1]);
+        1:  150:			assertEquals(subTest, testG.hand[thisPlayer][handPos], G.hand[thisPlayer][handPos-1]);
+        1:  151:			subTest++;
+        -:  152:			
+        1:  153:			printf("Test 3.4 hand count has decremented by one.\n\n");
+        1:  154:			printf("Hand count = %d, expected = %d\n\n", testG.handCount[thisPlayer], G.handCount[thisPlayer] - discard);
+        1:  155:			assertEquals(subTest, testG.handCount[thisPlayer], G.handCount[thisPlayer] - discard);
+        1:  156:			subTest++;
+        -:  157:			
+        -:  158:			
+        1:  159:			printf("Test 3.5 Last card from hand is removed.\n\n");
+        -:  160:			
+        4:  161:			while (testG.handCount[thisPlayer] != 1)
+        -:  162:			{
+        2:  163:				discardCard(testG.handCount[thisPlayer]-1, thisPlayer, &testG, trashFlag);
+        2:  164:				discard++;
+        -:  165:			}
+        -:  166:			
+        1:  167:			printf("hand count is %d\n\n", testG.handCount[thisPlayer]);
+        -:  168:			
+        -:  169:			
+        -:  170:			//select last card to discard
+        1:  171:			selectedCard = testG.hand[thisPlayer][0];
+        -:  172:			
+        1:  173:			printf("selectedcard = %d\n\n", selectedCard);
+        -:  174:			
+        1:  175:			discardCard(0, thisPlayer, &testG, trashFlag);
+        -:  176:			
+        1:  177:			discard++;
+        1:  178:			printf("Last card from hand = %d, expected = %d\n\n", testG.hand[thisPlayer][0], -1);
+        1:  179:			assertEquals(subTest, testG.hand[thisPlayer][0], -1);
+        1:  180:			subTest++;
+        -:  181:			
+        1:  182:			printf("Test 3.6 hand count is 0.\n\n");
+        1:  183:			printf("Hand count = %d, expected = %d\n\n", testG.handCount[thisPlayer], G.handCount[thisPlayer] - discard);
+        1:  184:			assertEquals(subTest, testG.handCount[thisPlayer], G.handCount[thisPlayer] - discard);
+        -:  185:			
+        -:  186:			
+        1:  187:			return 0;
+        -:  188:		default:
+    #####:  189:			return -1;
+        -:  190:	}
+        -:  191:}
+        -:  192:
+        -:  193:
+        1:  194:int main(){
+        -:  195:	int i;
+        -:  196:	
+        1:  197:	printf("*******************************************\n");
+        1:  198:    printf("---------- STARTING Test: %s ----------\n", TESTFUNCTION);
+        1:  199:	printf("*******************************************\n");
+        -:  200:    
+        4:  201:	for(i=0;i<MAX_TESTS;i++)
+        -:  202:	{
+        3:  203:		runTest(i);
+        -:  204:	}
+        -:  205:	   
+        -:  206:
+        1:  207:    printf("*******************************************\n");
+        1:  208:    printf("---------- COMPLETED Test: %s ---------\n", TESTFUNCTION);
+        1:  209:	printf("*******************************************\n");
+        1:  210:	printf("\n"); 
+        1:  211:	printf("\n"); 
+        1:  212:    return 0;
+        -:  213:}

@@ -1,0 +1,153 @@
+        -:    0:Source:cardtest4.c
+        -:    0:Graph:cardtest4.gcno
+        -:    0:Data:cardtest4.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * sabinc
+        -:    3: * CS 362 SW Eng II
+        -:    4: * Spring 2017
+        -:    5: *
+        -:    6: * Assignment 3
+        -:    7: * cardtest4.c
+        -:    8: */
+        -:    9: 
+        -:   10:#include "dominion.h"
+        -:   11:#include "dominion_helpers.h"
+        -:   12:#include <string.h>
+        -:   13:#include <stdio.h>
+        -:   14:#include <assert.h>
+        -:   15:#include "rngs.h"
+        -:   16:#include <stdlib.h>
+        -:   17:
+        -:   18:#define TESTCARD "Adventurer"
+        -:   19:#define TRUE 1
+        -:   20:#define FALSE 0
+        -:   21:#define MAX_S 16
+        -:   22:
+       21:   23:void assertEquals(int Test,  int prev, int post)
+        -:   24:{
+       21:   25:	if(prev == post)
+       20:   26:		printf("\n**********************Test #%d: PASS\n\n", Test);
+        -:   27:	else
+        1:   28:		printf("\n**********************Test #%d: FAIL\n\n", Test);
+       21:   29:}
+        -:   30:
+        1:   31:void assertGreaterThan(int Test,  int left, int right)
+        -:   32:{
+        1:   33:	if(left > right)
+    #####:   34:		printf("\n**********************Test #%d: PASS\n\n", Test);
+        -:   35:	else
+        1:   36:		printf("\n**********************Test #%d: FAIL\n\n", Test);
+        1:   37:}
+        -:   38:
+        -:   39:/*
+        -:   40: * Card Rules:
+        -:   41: *1. Current player should receive exactly 2 cards.
+        -:   42: *2. Discard pile should have 2 less cards than before.
+        -:   43: *3. New hand's score should outscore the previous hand by at least 2 teasures 
+        -:   44: *	(indicating that the 2 new cards are at least coppers and above)
+        -:   45: * other player's score does not change //done
+        -:   46: * . Player's hand has two more tresures than before //done
+        -:   47: *5. No state change from other players //done
+        -:   48: *5. No state change should occur to the victory card piles and kingdom card piles.//TODO look over function
+        -:   49: *
+        -:   50: */
+        -:   51:
+        1:   52:int main(){
+        1:   53:    int newCards = 0;
+        1:   54:    int discarded = 1;
+        1:   55:	int testNum = 1;
+        1:   56:    int shuffledCards = 0; 
+        -:   57:	int i, j, m, n;
+        1:   58:    int handpos = 0, choice1 = 0, choice2 = 0, choice3 = 0, bonus = 0;
+        1:   59:    int seed = 1000;
+        1:   60:    int numPlayers = 2;
+        1:   61:    int thisPlayer = 0;
+        -:   62:	struct gameState G, testG;
+        1:   63:	int minAdventererScore = 2;
+        1:   64:	int prevScore[numPlayers], postScore[numPlayers];
+        -:   65:	
+        1:   66:	int k[10] = {adventurer, embargo, village, minion, mine, cutpurse,
+        -:   67:			sea_hag, tribute, smithy, council_room};
+        -:   68:			
+        1:   69:	int supply[MAX_S] = {adventurer, embargo, village, minion, mine, cutpurse,
+        -:   70:			sea_hag, tribute, smithy, council_room, estate, duchy, province, copper,
+        -:   71:			silver, gold};
+        -:   72:
+        1:   73:	char *str_sup[MAX_S] = {"adventurer", "embargo", "village", "minion", "mine", "cutpurse",
+        -:   74:			"sea_hag", "tribute", "smithy", "council_room", "estate", "duchy", "province", "copper",
+        -:   75:			"silver", "gold"};
+        -:   76:			
+        -:   77:	// initialize a game state and player cards
+        1:   78:	initializeGame(numPlayers, k, seed, &G);
+        -:   79:	
+        1:   80:	printf("*******************************************\n");
+        1:   81:    printf("---------- STARTING Test: %s ----------\n", TESTCARD);
+        1:   82:	printf("*******************************************\n");
+        -:   83:	
+        -:   84:	// copy the game state to a test case
+        1:   85:	memcpy(&testG, &G, sizeof(struct gameState));	
+        -:   86:	
+        -:   87:	//gather scores from all players
+        3:   88:	for(m = thisPlayer; m <  numPlayers; m++){
+        2:   89:		postScore[m] = scoreFor(m,&testG);
+        -:   90:		
+        -:   91:	}
+        -:   92:		
+        1:   93:	cardEffect(adventurer, choice1, choice2, choice3, &testG, handpos, &bonus);
+        -:   94:	
+        -:   95:	//gather scores from all players
+        3:   96:	for(n = thisPlayer; n <  numPlayers; n++){
+        2:   97:		postScore[n] = scoreFor(n,&testG);
+        -:   98:	}
+        -:   99:	
+        1:  100:	newCards = 2;
+        -:  101:	
+        1:  102:	printf("Test 1. Current player should receive exactly 2 cards.\n");
+        -:  103:	/*1. Current player should receive exactly 2 cards.*/
+        1:  104:	printf("hand count = %d, expected = %d\n", testG.handCount[thisPlayer], G.handCount[thisPlayer] + newCards - discarded);
+        1:  105:	assertEquals(testNum, testG.handCount[thisPlayer], G.handCount[thisPlayer] + newCards - discarded);
+        1:  106:	testNum++;
+        -:  107:	
+        1:  108:	printf("Test 2. Discard pile should have 2 less cards than before.\n");
+        -:  109:	/*2. 2. Discard pile should have 2 less cards than before.*/
+        1:  110:	printf("deck count = %d, expected = %d\n", testG.discardCount[thisPlayer], G.discardCount[thisPlayer] - newCards + discarded);
+        1:  111:	assertEquals(testNum, testG.discardCount[thisPlayer], G.discardCount[thisPlayer] - newCards + discarded);
+        1:  112:	testNum++;
+        -:  113:
+        1:  114:	printf("Test 3. New hand's score should outscore the previous hand by at least 2 teasures (indicating that the 2 new cards are at least coppers and above)\n\n");
+        -:  115:	/*3.New hand's score should outscore the previous hand by at least 2 teasures (indicating that the 2 new cards are at least coppers and above) */
+        1:  116:	printf("Score of %d should score at least 2 higher than %d\n\n",postScore[thisPlayer],prevScore[thisPlayer]);
+        1:  117:	assertGreaterThan(testNum, postScore[thisPlayer], prevScore[thisPlayer]+minAdventererScore-1);	
+        1:  118:	testNum++;
+        -:  119:	
+        1:  120:	printf("4. All other players states do not change\n");
+        -:  121:	/*4. All other players states do not change*/
+        2:  122:	for(i = thisPlayer+1;i < numPlayers; i++){
+        1:  123:		printf("hand count from other player = %d, expected = %d\n", testG.handCount[i], G.handCount[i]);
+        1:  124:		printf("deck count from other player = %d, expected = %d\n", testG.deckCount[i], G.deckCount[i]);
+        1:  125:		assertEquals(testNum, testG.handCount[i], G.handCount[i]);
+        1:  126:		assertEquals(testNum, testG.deckCount[i], G.deckCount[i]);
+        1:  127:		printf("Score of %d should be >= %d",postScore[i],prevScore[i]);
+        1:  128:		assertEquals(testNum, postScore[i], prevScore[i]);
+        1:  129:		printf("\n");
+        -:  130:	}
+        1:  131:	testNum++;
+        -:  132:	
+        1:  133:	printf("5. No state change should occur to the victory card piles and kingdom card piles.\n");
+        -:  134:	/*5. No state change should occur to the victory card piles and kingdom card piles.*/
+       17:  135:	for(j=0;j<MAX_S; j++)
+        -:  136:	{
+       16:  137:		printf("supply count for %s = %d, expected %d\n", str_sup[j], testG.supplyCount[supply[j]],G.supplyCount[supply[j]]);
+       16:  138:		assertEquals(testNum, testG.supplyCount[supply[j]], G.supplyCount[supply[j]]);
+       16:  139:		printf("\n"); 
+        -:  140:	}
+        -:  141:	
+        1:  142:    printf("*******************************************\n");
+        1:  143:    printf("---------- COMPLETED Test: %s ---------\n", TESTCARD);
+        1:  144:	printf("*******************************************\n");
+        1:  145:	printf("\n"); 
+        1:  146:	printf("\n"); 
+        1:  147:    return 0;
+        -:  148:}

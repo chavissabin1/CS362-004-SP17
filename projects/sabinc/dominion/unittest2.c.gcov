@@ -1,0 +1,200 @@
+        -:    0:Source:unittest2.c
+        -:    0:Graph:unittest2.gcno
+        -:    0:Data:unittest2.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * sabinc
+        -:    3: * CS 362 SW Eng II
+        -:    4: * Spring 2017
+        -:    5: *
+        -:    6: * Assignment 3
+        -:    7: * unittest1.c
+        -:    8: */
+        -:    9: 
+        -:   10:#include "dominion.h"
+        -:   11:#include "dominion_helpers.h"
+        -:   12:#include <string.h>
+        -:   13:#include <stdio.h>
+        -:   14:#include <assert.h>
+        -:   15:#include "rngs.h"
+        -:   16:#include <stdlib.h>
+        -:   17:
+        -:   18:#define TESTFUNCTION "updateCoins"
+        -:   19:#define MAX_TESTS 6
+        -:   20:#define MAX_K 10
+        -:   21:#define TEST_1 0
+        -:   22:#define TEST_2 1
+        -:   23:#define TEST_3 2
+        -:   24:#define TEST_4 3
+        -:   25:#define TEST_5 4
+        -:   26:#define TEST_6 5
+        -:   27:#define TRUE 1
+        -:   28:#define FALSE 0
+        -:   29:
+        -:   30:/*
+        -:   31: * Function Rules:
+        -:   32: *1. Hand with one copper and 0 bonus will result in 1 coin count.
+        -:   33: *2. Hand with one silver and 0 bonus will result in 2 coin count.
+        -:   34: *3. Hand with one gold and 0 bonus will result in 3 coin count.
+        -:   35: *4. Hand with zero coin cards and 1 bonus will result in 1 coin count.
+        -:   36: *5. Hand with more than one coin card and bonus will result in sum of all coins and bonus;
+        -:   37: *6. Hand with no coin cards and bonus will result with 0 coins.
+        -:   38: *
+        -:   39: */
+        -:   40:
+        6:   41:void assertEquals(int Test,  int prev, int post)
+        -:   42:{
+        6:   43:	if(prev == post)
+        6:   44:		printf("\n**********************Test #%d: PASS\n\n", Test);
+        -:   45:	else
+    #####:   46:		printf("\n**********************Test #%d: FAIL\n\n", Test);
+        6:   47:}
+        -:   48:
+        -:   49:
+        1:   50:int main(){
+        -:   51:	int i, j, l, m, n;
+        1:   52:	int numPlayers = 2;
+        1:   53:	int seed = 1000;
+        1:   54:	int thisPlayer = 0;
+        1:   55:	int newCoin = 0;
+        1:   56:	int testNum = 1;
+        1:   57:	int bonus = 0;
+        -:   58:	struct gameState G, testG;
+        1:   59:	int k[MAX_K] = {adventurer, embargo, village, minion, mine, cutpurse,
+        -:   60:			sea_hag, tribute, smithy, council_room};	
+        -:   61:		
+        1:   62:	initializeGame(numPlayers, k, seed, &G);
+        -:   63:	
+        -:   64:	//clear the coin state
+        1:   65:	G.coins = 0;
+        -:   66:	
+        -:   67:	// copy the game state to a test case
+        1:   68:	memcpy(&testG, &G, sizeof(struct gameState));
+        -:   69:	
+        1:   70:	printf("*******************************************\n");
+        1:   71:    printf("---------- STARTING Test: %s ----------\n", TESTFUNCTION);
+        1:   72:	printf("*******************************************\n");
+        -:   73:  
+        1:   74:	printf("Test 1. Hand with one copper and 0 bonus will result in 1 coin count.\n\n");
+        -:   75:	
+        1:   76:	newCoin = 1;
+        1:   77:	bonus = 0;
+        -:   78:	//modify hand to have one copper. 
+        1:   79:	testG.hand[thisPlayer][0] = copper;
+        -:   80:	//printf("Card %d in Hand contains %d, expected %d \n\n",0,testG.hand[thisPlayer][0],copper);
+        -:   81:	
+        -:   82:	//fill remaining hand with non coin cards
+        5:   83:	for (i=1; i< testG.handCount[thisPlayer]; i++)
+        -:   84:	{
+        4:   85:		testG.hand[thisPlayer][i] = smithy;
+        -:   86:	//printf("Card %d in Hand contains %d, expected %d \n\n",i,testG.hand[thisPlayer][i],smithy);
+        -:   87:	}
+        -:   88:	
+        1:   89:	updateCoins(thisPlayer, &testG, bonus);
+        -:   90:	
+        1:   91:	printf("coin count = %d, expected = %d\n", testG.coins, G.coins + newCoin + bonus);
+        1:   92:	assertEquals(testNum, testG.coins, G.coins + newCoin + bonus);;
+        1:   93:	testNum++;
+        -:   94:	
+        -:   95:	
+        1:   96:	printf("Test 2. Hand with one silver and 0 bonus will result in 2 coin count.\n\n");
+        -:   97:	
+        1:   98:	newCoin = 2;
+        1:   99:	bonus = 0;
+        -:  100:	//modify hand to have one copper. 
+        1:  101:	testG.hand[thisPlayer][0] = silver;
+        -:  102:	//printf("Card %d in Hand contains %d, expected %d \n\n",0,testG.hand[thisPlayer][0],silver);
+        -:  103:	
+        -:  104:	//fill remaining hand with non coin cards
+        5:  105:	for (j=1; j< testG.handCount[thisPlayer]; j++)
+        -:  106:	{
+        4:  107:		testG.hand[thisPlayer][j] = smithy;
+        -:  108:	//printf("Card %d in Hand contains %d, expected %d \n\n",i,testG.hand[thisPlayer][i],smithy);
+        -:  109:	}
+        -:  110:	
+        1:  111:	updateCoins(thisPlayer, &testG, bonus);
+        -:  112:	
+        1:  113:	printf("coin count = %d, expected = %d\n", testG.coins, G.coins + newCoin + bonus);
+        1:  114:	assertEquals(testNum, testG.coins, G.coins + newCoin + bonus);
+        1:  115:	testNum++;
+        -:  116:	
+        1:  117:	printf("Test 3. Hand with one gold and 0 bonus will result in 3 coin count.\n\n");
+        -:  118:	
+        1:  119:	newCoin = 3;
+        1:  120:	bonus = 0;
+        -:  121:	//modify hand to have one copper. 
+        1:  122:	testG.hand[thisPlayer][0] = gold;
+        -:  123:	
+        -:  124:	//fill remaining hand with non coin cards
+        5:  125:	for (n=1; n< testG.handCount[thisPlayer]; n++)
+        -:  126:	{
+        4:  127:		testG.hand[thisPlayer][n] = smithy;
+        -:  128:	}
+        -:  129:	
+        1:  130:	updateCoins(thisPlayer, &testG, bonus);
+        -:  131:	
+        1:  132:	printf("coin count = %d, expected = %d\n", testG.coins, G.coins + newCoin + bonus);
+        1:  133:	assertEquals(testNum, testG.coins, G.coins + newCoin + bonus);
+        1:  134:	testNum++;
+        -:  135:	
+        1:  136:	printf("Test 4. Hand with zero coin cards and 1 bonus will result in 1 coin count.\n\n");
+        -:  137:	
+        1:  138:	newCoin = 0;
+        1:  139:	bonus = 1;
+        -:  140:	
+        -:  141:	//fill hand with non coin cards
+        6:  142:	for (l=0; l< testG.handCount[thisPlayer]; l++)
+        -:  143:	{
+        5:  144:		testG.hand[thisPlayer][l] = smithy;
+        -:  145:	}
+        -:  146:	
+        1:  147:	updateCoins(thisPlayer, &testG, bonus);
+        -:  148:	
+        1:  149:	printf("coin count = %d, expected = %d\n", testG.coins, G.coins + newCoin + bonus);
+        1:  150:	assertEquals(testNum, testG.coins, G.coins + newCoin + bonus);
+        1:  151:	testNum++;
+        -:  152:	
+        -:  153:	
+        1:  154:	printf("Test 5. Hand with more than one coin card and bonus will result in sum of all coins and bonus;\n\n");
+        -:  155:	
+        1:  156:	newCoin = 10;//2 copper + 1 silver + 2 gold = 10
+        1:  157:	bonus = 1;
+        -:  158:	
+        -:  159:	//fill hand with fixed coin cards
+        1:  160:	testG.hand[thisPlayer][0] = copper;
+        1:  161:	testG.hand[thisPlayer][1] = copper;
+        1:  162:	testG.hand[thisPlayer][2] = silver;
+        1:  163:	testG.hand[thisPlayer][3] = gold;
+        1:  164:	testG.hand[thisPlayer][4] = gold;
+        -:  165:	
+        -:  166:	
+        1:  167:	updateCoins(thisPlayer, &testG, bonus);
+        -:  168:	
+        1:  169:	printf("coin count = %d, expected = %d\n", testG.coins, G.coins + newCoin + bonus);
+        1:  170:	assertEquals(testNum, testG.coins, G.coins + newCoin + bonus);
+        1:  171:	testNum++;
+        -:  172:	
+        1:  173:	printf("Test 6. Hand with no coin cards and bonus will result with 0 coins.\n\n");
+        -:  174:	
+        1:  175:	newCoin = 0;
+        1:  176:	bonus = 0;
+        -:  177:	
+        -:  178:	//fill hand with non coin cards
+        6:  179:	for (m=0; m< testG.handCount[thisPlayer]; m++)
+        -:  180:	{
+        5:  181:		testG.hand[thisPlayer][m] = smithy;
+        -:  182:	}
+        -:  183:	
+        1:  184:	updateCoins(thisPlayer, &testG, bonus);
+        -:  185:	
+        1:  186:	printf("coin count = %d, expected = %d\n", testG.coins, G.coins + newCoin + bonus);
+        1:  187:	assertEquals(testNum, testG.coins, G.coins + newCoin + bonus);
+        -:  188:	
+        1:  189:    printf("*******************************************\n");
+        1:  190:    printf("---------- COMPLETED Test: %s ---------\n", TESTFUNCTION);
+        1:  191:	printf("*******************************************\n");
+        1:  192:	printf("\n"); 
+        1:  193:	printf("\n"); 
+        1:  194:    return 0;
+        -:  195:}

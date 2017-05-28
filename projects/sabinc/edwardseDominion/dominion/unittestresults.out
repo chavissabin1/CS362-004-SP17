@@ -1,0 +1,119 @@
+*******************************************
+---------- STARTING Test: Adventurer ----------
+*******************************************
+Test 1. Current player should receive exactly 2 cards.
+hand count = 9, expected = 6
+
+**********************Test #1: FAIL
+
+Test 2. Discard pile should have 2 less cards than before.
+deck count = 0, expected = -1
+
+**********************Test #2: FAIL
+
+Test 3. New hand's score should outscore the previous hand by at least 2 teasures (indicating that the 2 new cards are at least coppers and above)
+
+Score of 3 should score at least 2 higher than 0
+
+
+**********************Test #3: PASS
+
+4. All other players states do not change
+hand count from other player = 1, expected = 0
+deck count from other player = 9, expected = 10
+
+**********************Test #4: FAIL
+
+
+**********************Test #4: FAIL
+
+Score of 0 should be >= 0
+**********************Test #4: PASS
+
+
+5. No state change should occur to the victory card piles and kingdom card piles.
+supply count for adventurer = 10, expected 10
+
+**********************Test #5: PASS
+
+
+supply count for embargo = 10, expected 10
+
+**********************Test #5: PASS
+
+
+supply count for village = 10, expected 10
+
+**********************Test #5: PASS
+
+
+supply count for minion = 10, expected 10
+
+**********************Test #5: PASS
+
+
+supply count for mine = 10, expected 10
+
+**********************Test #5: PASS
+
+
+supply count for cutpurse = 10, expected 10
+
+**********************Test #5: PASS
+
+
+supply count for sea_hag = 10, expected 10
+
+**********************Test #5: PASS
+
+
+supply count for tribute = 10, expected 10
+
+**********************Test #5: PASS
+
+
+supply count for smithy = 10, expected 10
+
+**********************Test #5: PASS
+
+
+supply count for council_room = 10, expected 10
+
+**********************Test #5: PASS
+
+
+supply count for estate = 8, expected 8
+
+**********************Test #5: PASS
+
+
+supply count for duchy = 8, expected 8
+
+**********************Test #5: PASS
+
+
+supply count for province = 8, expected 8
+
+**********************Test #5: PASS
+
+
+supply count for copper = 46, expected 46
+
+**********************Test #5: PASS
+
+
+supply count for silver = 40, expected 40
+
+**********************Test #5: PASS
+
+
+supply count for gold = 30, expected 30
+
+**********************Test #5: PASS
+
+
+*******************************************
+---------- COMPLETED Test: Adventurer ---------
+*******************************************
+
+

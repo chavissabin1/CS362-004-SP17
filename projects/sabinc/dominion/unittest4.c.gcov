@@ -1,0 +1,124 @@
+        -:    0:Source:unittest4.c
+        -:    0:Graph:unittest4.gcno
+        -:    0:Data:unittest4.gcda
+        -:    0:Runs:1
+        -:    0:Programs:1
+        -:    1:/*
+        -:    2: * sabinc
+        -:    3: * CS 362 SW Eng II
+        -:    4: * Spring 2017
+        -:    5: *
+        -:    6: * Assignment 3
+        -:    7: * unittest4.c
+        -:    8: */
+        -:    9: 
+        -:   10:#include "dominion.h"
+        -:   11:#include "dominion_helpers.h"
+        -:   12:#include <string.h>
+        -:   13:#include <stdio.h>
+        -:   14:#include <assert.h>
+        -:   15:#include "rngs.h"
+        -:   16:#include <stdlib.h>
+        -:   17:
+        -:   18:#define TESTFUNCTION "isGameOver"
+        -:   19:#define MAX_TESTS 3
+        -:   20:#define TEST_1 0
+        -:   21:#define TEST_2 1
+        -:   22:#define TEST_3 2
+        -:   23:#define TRUE 1
+        -:   24:#define FALSE 0
+        -:   25:
+        -:   26:/*
+        -:   27: * Function Rules:
+        -:   28: *1. function returns 1 if stack of province cards is empty
+        -:   29: *2. function returns 1 if three or more supply piles are at zero
+        -:   30: *3. function returns 0 if less than three supply piles and province is not zero
+        -:   31: *3. Otherwise return 0
+        -:   32: *4.
+        -:   33: *
+        -:   34: */
+        -:   35:
+        3:   36:void assertEquals(int Test,  int prev, int post)
+        -:   37:{
+        3:   38:	if(prev == post)
+        3:   39:		printf("\n**********************Test #%d: PASS\n\n", Test);
+        -:   40:	else
+    #####:   41:		printf("\n**********************Test #%d: FAIL\n\n", Test);
+        3:   42:}
+        -:   43:
+        3:   44:int runTest(int testNum){
+        3:   45:	int numPlayers = 2;
+        3:   46:	int seed = 1000;
+        -:   47:	struct gameState G, testG;
+        -:   48:	int result;
+        -:   49:	
+        3:   50:	int k[10] = {adventurer, embargo, village, minion, mine, cutpurse,
+        -:   51:			sea_hag, tribute, smithy, council_room};
+        -:   52:	
+        3:   53:	initializeGame(numPlayers, k, seed, &G);
+        -:   54:   
+        -:   55:	// copy the game state to a test case
+        3:   56:	memcpy(&testG, &G, sizeof(struct gameState));
+        -:   57:		
+        3:   58:	switch(testNum)
+        -:   59:	{
+        -:   60:		case TEST_1:
+        -:   61:			//in order to proove that having no provinces in supply will end the game we must first empty the supply
+        1:   62:			testG.supplyCount[province] = 0; 
+        -:   63:			
+        1:   64:			printf("Test 1.Check if game ends if Province supply is empty.\n\n");
+        1:   65:			result = isGameOver(&testG);
+        -:   66:			
+        1:   67:			printf("Game end state is = %d, expected = %d\n\n", result, 1);
+        1:   68:			assertEquals(TEST_1, result,1);
+        -:   69:			
+        1:   70:			return 0;
+        -:   71:		case TEST_2:
+        -:   72:			//in order to proove that having at least three cards empty in supply will end the game we must first empty the supply cards
+        1:   73:			testG.supplyCount[smithy] = 0; 
+        1:   74:			testG.supplyCount[adventurer] = 0; 
+        1:   75:			testG.supplyCount[village] = 0; 
+        -:   76:			
+        1:   77:			printf("Test 2. Game over if three or more supply cards are empty.\n\n");
+        1:   78:			result = isGameOver(&testG);
+        -:   79:			
+        -:   80:			
+        1:   81:			printf("Game end state is = %d, expected = %d\n\n", result, 1);
+        1:   82:			assertEquals(TEST_2, result,1);
+        -:   83:			
+        1:   84:			return 0;
+        -:   85:		case TEST_3:
+        -:   86:		
+        -:   87:			//leave game state alone after initialization. 
+        -:   88:			//All supply cards are not empty. Therefore game should not end.
+        1:   89:			printf("Test 2. Game is not over if test 1 & 2 conditions are not met.\n\n");
+        1:   90:			result = isGameOver(&testG);
+        -:   91:			
+        1:   92:			printf("Game end state is = %d, expected = %d\n\n", result, 0);
+        1:   93:			assertEquals(TEST_3, result,0);
+        -:   94:			
+        1:   95:			return 0;
+        -:   96:		default:
+    #####:   97:			return -1;
+        -:   98:	}
+        -:   99:}
+        -:  100:
+        1:  101:int main(){
+        -:  102:	int i;
+        -:  103:	
+        1:  104:	printf("*******************************************\n");
+        1:  105:    printf("---------- STARTING Test: %s ----------\n", TESTFUNCTION);
+        1:  106:	printf("*******************************************\n");
+        -:  107:    
+        4:  108:	for(i=0;i<MAX_TESTS;i++)
+        -:  109:	{
+        3:  110:		runTest(i);
+        -:  111:	}
+        -:  112:	
+        1:  113:    printf("*******************************************\n");
+        1:  114:    printf("---------- COMPLETED Test: %s ---------\n", TESTFUNCTION);
+        1:  115:	printf("*******************************************\n");
+        1:  116:	printf("\n"); 
+        1:  117:	printf("\n"); 
+        1:  118:    return 0;
+        -:  119:}

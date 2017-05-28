@@ -1,0 +1,127 @@
+edwardse
+CS362
+Assignment 5
+
+Bug Reporting Template
+======================
+
+***********************
+Title:  Playing Adventurer Rarely Discards Correctly  
+
+Class: Serious Bug
+e.g. "Feature Request", "System Error", "Serious Bug"
+
+Date: 28th May 2017      
+Reported By: edwardse  
+Email: edwardse@school.edu
+
+Priority: Major
+
+Product: Dominion.c                  Version: sabinc-assignment-4
+Platform: Flip2                      Version: 3.10.0-327.36.3.el7.x86_64
+      
+
+Is it reproducible: Yes
+
+Description
+===========
+When the PlayAdventurer() function is called, the current player should draw 
+cards until having drawn two treasure cards, and should then discard any other
+drawn card.
+
+Instead, the current player will only discard until the number of non-treasure
+cards drawn is less than 100.  Rarely, especially in a realistic situation, will
+the current player have drawn nearly 100 cards, let alone 100 non-treasure cards.
+
+
+Steps to Produce/Reproduce
+--------------------------
+Initialize the game.  Set the current player's deckCount to something less than 100.
+Ensure at least two cards are treasure cards.
+
+Call PlayAdventurer(), passing it the current game state. 
+
+
+Expected Results
+----------------
+The current player will draw cards until having drawn two treasures.  All cards 
+drawn, except the two treasures, will be discarded.
+
+
+Actual Results
+--------------
+If the current player draws less than 100 cards, no cards will be discarded.
+
+
+Workarounds
+-----------
+Initialize the game.  Set the current player's deckCount to 102 or more cards.  
+Ensure none of the cards in the deck in the first 100 positions are treasure cards.
+
+
+Attachments
+-----------
+
+
+
+Other Information
+-----------------
+
+
+***********************
+Title:  Playing Smithy Causes the Current Player to Draw an Extra Card  
+
+Class: Serious Bug
+e.g. "Feature Request", "System Error", "Serious Bug"
+
+Date: 28th May 2017      
+Reported By: edwardse  
+Email: edwardse@school.edu
+
+Priority: Major
+
+Product: Dominion.c                  Version: sabinc-assignment-4
+Platform: Flip2                      Version: 3.10.0-327.36.3.el7.x86_64
+
+Is it reproducible: Yes, consistently
+
+Description
+===========
+Playing Smithy causes the current player to draw four cards instead of the expected
+three.  In fact, the number of cards drawn is MAX_PLAYERS, which can change, causing
+the current player to draw a varying number of cards between different games and/or 
+versions.
+
+
+Steps to Produce/Reproduce
+--------------------------
+Initialize the game.  Either insert, or find a Smithy card in the current player's 
+hand.
+
+Call PlaySmitty(), passing it the game state and the hand position of the smithy
+card.
+
+
+Expected Results
+----------------
+The current player will draw three cards.  Always.
+
+
+Actual Results
+--------------
+The current player will draw MAX_PLAYERS cards, which is currently set to four.
+
+
+Workarounds
+-----------
+Set MAX_PLAYERS to three before compiling and running dominion.c.
+
+
+Attachments
+-----------
+
+
+
+Other Information
+-----------------
+
